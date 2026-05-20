@@ -94,6 +94,7 @@ if __name__ == "__main__":
     parser.add_argument("--groundtruth", type=str, required=True, help="Path to the groundtruth image")
     args = parser.parse_args()
     basename = os.path.basename(args.input)
+    basename = basename.split('.')[0]
 
     img = cv2.imread(args.input, cv2.IMREAD_UNCHANGED)
     groundtruth = cv2.imread(args.groundtruth, cv2.IMREAD_GRAYSCALE)
