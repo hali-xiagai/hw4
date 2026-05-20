@@ -6,7 +6,8 @@ import os
 def get_rgba(img):
     if img.shape[2] == 4:
         # 將 BGRA 轉換為 RGBA，以符合論文的 RGB 邏輯
-        img_bgr_blurred = cv2.GaussianBlur(img[:,:,:3], (5, 5), 0)
+        img_bgr_blurred = cv2.bilateralFilter(img[:,:,:3], 9, 75, 75)
+        # img_bgr_blurred = cv2.GaussianBlur(img[:,:,:3], (5, 5), 0)
         img_to_process = np.dstack((img_bgr_blurred, img[:,:,3]))
         img_rgba = cv2.cvtColor(img_to_process, cv2.COLOR_BGRA2RGBA)
         
@@ -20,7 +21,8 @@ def get_rgba(img):
     else:
         # 如果圖片只有 3 個通道 (例如 JPG 沒有透明度)
         # 將 BGR 轉換為 RGB
-        img_to_process = cv2.GaussianBlur(img, (5, 5), 0)
+        # img_to_process = cv2.GaussianBlur(img, (5, 5), 0)
+        img_to_process = cv2.bilateralFilter(img[:,:,:3], 9, 75, 75)
         img_rgb = cv2.cvtColor(img_to_process, cv2.COLOR_BGR2RGB)
         
         R = img_rgb[:, :, 0]
