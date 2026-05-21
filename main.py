@@ -2,6 +2,7 @@ import argparse
 import numpy as np
 import cv2
 import os
+import matplotlib.pyplot as plt
 
 def get_rgba(img):
     if img.shape[2] == 4:
@@ -88,6 +89,29 @@ def calculate_iou(mask1, mask2):
         
     return intersection / union
 
+def save_output(original, groundtruth, result, basename):
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+    fig.suptitle(f"{basename} | IoU: {iou:.4f}", fontsize=16, fontweight='bold')
+    plt.subplot(1, 3, 1)
+    plt.title("Original Image")
+    plt.imshow(cv2.cvtColor(original, cv2.COLOR_BGR2RGB))
+    plt.axis('off')
+
+    plt.subplot(1, 3, 2)
+    plt.title("Ground Truth")
+    plt.imshow(groundtruth, cmap='gray')
+    plt.axis('off')
+
+    plt.subplot(1, 3, 3)
+    plt.title("Skin Detection Result")
+    plt.imshow(result, cmap='gray')
+    plt.axis('off')
+
+    plt.tight_layout()
+    plt.savefig(f"{basename}_output.png", dpi=300, bbox_inches='tight')
+    # plt.savefig(f"{basename}_output.png")
+    # plt.show()
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Input Image")
     parser.add_argument("--input", type=str, required=True, help="Path to the input image")
@@ -123,8 +147,9 @@ if __name__ == "__main__":
 
     # cv2.imshow("Original", img)
     # cv2.imshow("Skin Detection (Binary Mask)", binary_result)
-    cv2.imwrite(f"{basename}_output.png", binary_result)
+    save_output(img, groundtruth, binary_result, basename)
+    # cv2.imwrite(f"{basename}_output.png", binary_result)
     
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
     
